@@ -1,0 +1,7 @@
+../JAVELIBS/src/stepper.c:10:5:StepChkDir	16	static
+../JAVELIBS/src/stepper.c:27:6:StepUpdate	24	static
+../JAVELIBS/src/stepper.c:57:6:Step	16	static
+../JAVELIBS/src/stepper.c:76:6:StepGoTo	16	static
+../JAVELIBS/src/stepper.c:80:6:StepSetDir	16	static
+../JAVELIBS/src/stepper.c:97:6:StepEnable	16	static
+../JAVELIBS/src/stepper.c:113:6:StepInit	16	static
