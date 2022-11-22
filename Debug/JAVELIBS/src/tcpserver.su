@@ -1,2 +1,0 @@
-../JAVELIBS/src/tcpserver.c:26:13:tcp_thread	32	static
-../JAVELIBS/src/tcpserver.c:99:6:tcpserver_init	16	static

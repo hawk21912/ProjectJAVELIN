@@ -1,4 +1,0 @@
-../JAVELIBS/src/tcpclient.c:30:13:tcpinit_thread	24	static
-../JAVELIBS/src/tcpclient.c:104:6:tcpsend	32	static
-../JAVELIBS/src/tcpclient.c:113:13:tcpsend_thread	16	static
-../JAVELIBS/src/tcpclient.c:129:6:tcpclient_init	16	static

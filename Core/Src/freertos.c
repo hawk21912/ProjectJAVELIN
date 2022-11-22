@@ -28,6 +28,8 @@
 #include "usart.h"
 #include "tcpserver.h"
 #include "iwdg.h"
+#include "stdio.h"
+#include "adc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +49,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+volatile uint32_t adcval[3];
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -70,6 +72,13 @@ const osThreadAttr_t IDWGTrigger_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for ADCPoll */
+osThreadId_t ADCPollHandle;
+const osThreadAttr_t ADCPoll_attributes = {
+  .name = "ADCPoll",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -79,6 +88,7 @@ const osThreadAttr_t IDWGTrigger_attributes = {
 void StartDefaultTask(void *argument);
 void Blink_Init(void *argument);
 void IDWGTrigger_Init(void *argument);
+void ADCPoll_Init(void *argument);
 
 extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -136,6 +146,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of IDWGTrigger */
   IDWGTriggerHandle = osThreadNew(IDWGTrigger_Init, NULL, &IDWGTrigger_attributes);
 
+  /* creation of ADCPoll */
+  ADCPollHandle = osThreadNew(ADCPoll_Init, NULL, &ADCPoll_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -173,6 +186,10 @@ void StartDefaultTask(void *argument)
 }
 
 /* USER CODE BEGIN Header_Blink_Init */
+#define TEMPSENSOR_CAL1_ADDR ((uint16_t*) (0x1FF1E820U)
+#define TEMPSENSOR_CAL2_ADDR ((uint16_t*) (0x1FF1E840U)
+#define TEMPSENSOR_CAL1_TEMP (( int32_t)   30)
+#define TEMPSENSOR_CAL2_TEMP (( int32_t)  110)
 /**
 * @brief Function implementing the Blink thread.
 * @param argument: Not used
@@ -183,15 +200,27 @@ void Blink_Init(void *argument)
 {
   /* USER CODE BEGIN Blink_Init */
   /* Infinite loop */
+    float tempcal = (TEMPSENSOR_CAL2_TEMP-TEMPSENSOR_CAL1_TEMP) /( (uint32_t) *TEMPSENSOR_CAL2_ADDR)  -   (uint32_t) *TEMPSENSOR_CAL1_ADDR)   ) ;
+
 	int cnt = 0;
-		  char msg[50];
+		  char msg[100];
 		uint32_t tick;
+  //  HAL_ADC_Start(&hadc3);
+  //  HAL_ADC_PollForConversion(&hadc3, 100);
+  float vref,vbat,temp;
   for(;;)
   {
 	  tick=  osKernelGetTickCount();
-	  int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
+    //  adcval = HAL_ADC_GetValue(&hadc3);
+    vref= adcval[2]*4*3.3/65536;
+    vbat = adcval[1]*4*3.3/65536;
+    temp = .02*(adcval[0]-(uint32_t) *TEMPSENSOR_CAL2_ADDR) )+30;
+	 // int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
+      int len = sprintf(msg,"MS Since last issue :%d Temp =%f Vbat = %f vref = %f\n\r",tick,temp,vbat,vref );
 	 	  HAL_UART_Transmit(&huart3, msg,len , 100);
 	 	  cnt++;
+
+
     osDelay(1000);
   }
   /* USER CODE END Blink_Init */
@@ -216,8 +245,66 @@ void IDWGTrigger_Init(void *argument)
   /* USER CODE END IDWGTrigger_Init */
 }
 
+/* USER CODE BEGIN Header_ADCPoll_Init */
+
+uint32_t ADC3_Chnls[3] = {ADC_CHANNEL_TEMPSENSOR,ADC_CHANNEL_VBAT,ADC_CHANNEL_VREFINT};
+
+void ADC_ChnlSel(ADC_HandleTypeDef *hadc, int Chnl){
+
+    ADC_ChannelConfTypeDef sConfig = {0};
+
+    sConfig.Channel = ADC3_Chnls[Chnl];
+    //sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
+    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_387CYCLES_5;
+    sConfig.SingleDiff = ADC_SINGLE_ENDED;
+    sConfig.OffsetNumber = ADC_OFFSET_NONE;
+    sConfig.Offset = 0;
+    sConfig.OffsetSignedSaturation = DISABLE;
+    if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+}
+
+/**
+* @brief Function implementing the ADCPoll thread.
+* @param argument: Not used
+* @retval None
+ * TODO calculate time to see if all can be converted in one go
+*/
+/* USER CODE END Header_ADCPoll_Init */
+
+void ADCPoll_Init(void *argument)
+{
+  /* USER CODE BEGIN ADCPoll_Init */
+  /* Infinite loop */
+    int adcchnl = 0;
+    HAL_ADC_Start(&hadc3);
+    HAL_ADC_PollForConversion(&hadc3, 100);
+  for(;;)
+  {
+         adcval[adcchnl] = HAL_ADC_GetValue(&hadc3);
+         HAL_ADC_Stop(&hadc3);
+
+         adcchnl++;
+         if(adcchnl >2){
+             adcchnl = 0;
+         }
+         ADC_ChnlSel(&hadc3,adcchnl);
+         HAL_ADC_Start(&hadc3);
+         HAL_ADC_PollForConversion(&hadc3, 100);
+
+
+    osDelay(1);
+  }
+  /* USER CODE END ADCPoll_Init */
+}
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+
 
 /* USER CODE END Application */
 
