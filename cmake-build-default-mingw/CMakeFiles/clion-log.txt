@@ -1,0 +1,17 @@
+C:\Users\joshh\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.4345.21\bin\cmake\win\bin\cmake.exe -DCMAKE_MAKE_PROGRAM=C:/Users/joshh/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/222.4345.21/bin/ninja/win/ninja.exe -G Ninja -S C:\Users\joshh\CLionProjects\ProjectJAVELIN -B C:\Users\joshh\CLionProjects\ProjectJAVELIN\cmake-build-default-mingw
+-- Minimal optimization, debug info included
+CMake Error at CMakeLists.txt:52 (include_directories):
+  Syntax error in cmake code at
+
+    C:/Users/joshh/CLionProjects/ProjectJAVELIN/CMakeLists.txt:52
+
+  when parsing string
+
+    ${workspace_loc:/aaaaaaa/JAVELIBS/inc}
+
+  Invalid character (':') in a variable name: 'workspace_loc'
+
+
+-- Configuring incomplete, errors occurred!
+See also "C:/Users/joshh/CLionProjects/ProjectJAVELIN/cmake-build-default-mingw/CMakeFiles/CMakeOutput.log".
+See also "C:/Users/joshh/CLionProjects/ProjectJAVELIN/cmake-build-default-mingw/CMakeFiles/CMakeError.log".

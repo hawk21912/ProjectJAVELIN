@@ -33,7 +33,7 @@ static void tcp_thread(void *arg)
 
 	if (conn!=NULL)
 	{
-		/* Bind connection to the port number 7. */
+		/* Bind connection to the port number 10. */
 		err = netconn_bind(conn, IP_ADDR_ANY, 10);
 
 		if (err == ERR_OK)
@@ -63,7 +63,7 @@ static void tcp_thread(void *arg)
 						/* If there is some data remaining to be sent, the following process will continue */
 						do
 						{
-
+                            
 							strncpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
 
 							MSGReceive(msg);

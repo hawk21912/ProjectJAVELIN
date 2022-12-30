@@ -275,7 +275,6 @@ void ADC_ChnlSel(ADC_HandleTypeDef *hadc, int Chnl){
  * TODO calculate time to see if all can be converted in one go
 */
 /* USER CODE END Header_ADCPoll_Init */
-
 void ADCPoll_Init(void *argument)
 {
   /* USER CODE BEGIN ADCPoll_Init */
