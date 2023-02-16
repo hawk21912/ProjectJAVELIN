@@ -60,8 +60,20 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
+#define LED1_Pin GPIO_PIN_3
+#define LED1_GPIO_Port GPIOF
+#define LED2_Pin GPIO_PIN_5
+#define LED2_GPIO_Port GPIOF
+#define LED3_Pin GPIO_PIN_10
+#define LED3_GPIO_Port GPIOF
 #define LD1_Pin GPIO_PIN_0
 #define LD1_GPIO_Port GPIOB
+#define STEP1_EN_Pin GPIO_PIN_13
+#define STEP1_EN_GPIO_Port GPIOF
+#define STEP1_Dir_Pin GPIO_PIN_14
+#define STEP1_Dir_GPIO_Port GPIOF
+#define STEP1_step_Pin GPIO_PIN_15
+#define STEP1_step_GPIO_Port GPIOF
 #define GPIO4_Pin GPIO_PIN_7
 #define GPIO4_GPIO_Port GPIOE
 #define GPIO5_Pin GPIO_PIN_8
@@ -76,6 +88,8 @@ void Error_Handler(void);
 #define GPIO2_GPIO_Port GPIOE
 #define PWM5_Pin GPIO_PIN_13
 #define PWM5_GPIO_Port GPIOE
+#define STOP_Pin GPIO_PIN_14
+#define STOP_GPIO_Port GPIOE
 #define GPIO1_Pin GPIO_PIN_15
 #define GPIO1_GPIO_Port GPIOE
 #define PWM1_Pin GPIO_PIN_10
@@ -90,6 +104,8 @@ void Error_Handler(void);
 #define USB_OTG_FS_PWR_EN_GPIO_Port GPIOD
 #define USB_OTG_FS_OVCR_Pin GPIO_PIN_7
 #define USB_OTG_FS_OVCR_GPIO_Port GPIOG
+#define FAULT_Pin GPIO_PIN_0
+#define FAULT_GPIO_Port GPIOE
 #define LD2_Pin GPIO_PIN_1
 #define LD2_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */

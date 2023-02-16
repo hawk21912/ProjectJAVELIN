@@ -29,6 +29,7 @@
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
+#include "TraxxasESC.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -130,7 +131,8 @@ int main(void)
   HAL_UART_Transmit(&huart3, "plz\n\r", 6, 10);
 
   HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
-  TIM12->CCR1 = TIM12->ARR *120/255;
+  HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
+  //TIM12->CCR1 = TIM12->ARR *120/255;
 
     HAL_ADCEx_Calibration_Start(&hadc3,ADC_CALIB_OFFSET,ADC_SINGLE_ENDED);
   /* USER CODE END 2 */
@@ -142,12 +144,16 @@ int main(void)
   /* Start scheduler */
   osKernelStart();
 
+
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
+
+
+
 
     /* USER CODE BEGIN 3 */
   }

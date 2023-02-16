@@ -30,6 +30,8 @@
 #include "iwdg.h"
 #include "stdio.h"
 #include "adc.h"
+#include "TraxxasESC.h"
+#include "Servo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -79,6 +81,32 @@ const osThreadAttr_t ADCPoll_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for PSFunctions */
+osThreadId_t PSFunctionsHandle;
+const osThreadAttr_t PSFunctions_attributes = {
+  .name = "PSFunctions",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for SSFunctions */
+osThreadId_t SSFunctionsHandle;
+const osThreadAttr_t SSFunctions_attributes = {
+  .name = "SSFunctions",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for DSFunctions */
+osThreadId_t DSFunctionsHandle;
+const osThreadAttr_t DSFunctions_attributes = {
+  .name = "DSFunctions",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for RX_msg_queue */
+osMessageQueueId_t RX_msg_queueHandle;
+const osMessageQueueAttr_t RX_msg_queue_attributes = {
+  .name = "RX_msg_queue"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -89,6 +117,9 @@ void StartDefaultTask(void *argument);
 void Blink_Init(void *argument);
 void IDWGTrigger_Init(void *argument);
 void ADCPoll_Init(void *argument);
+void PSFunctions_Init(void *argument);
+void SSFunctions_Init(void *argument);
+void DSFunctions_Init(void *argument);
 
 extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -132,6 +163,10 @@ void MX_FREERTOS_Init(void) {
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* creation of RX_msg_queue */
+  RX_msg_queueHandle = osMessageQueueNew (32, sizeof(uint16_t), &RX_msg_queue_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -148,6 +183,15 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of ADCPoll */
   ADCPollHandle = osThreadNew(ADCPoll_Init, NULL, &ADCPoll_attributes);
+
+  /* creation of PSFunctions */
+  PSFunctionsHandle = osThreadNew(PSFunctions_Init, NULL, &PSFunctions_attributes);
+
+  /* creation of SSFunctions */
+  SSFunctionsHandle = osThreadNew(SSFunctions_Init, NULL, &SSFunctions_attributes);
+
+  /* creation of DSFunctions */
+  DSFunctionsHandle = osThreadNew(DSFunctions_Init, NULL, &DSFunctions_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -217,7 +261,7 @@ void Blink_Init(void *argument)
     temp = .02*(adcval[0]-(uint32_t) *TEMPSENSOR_CAL2_ADDR) )+30;
 	 // int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
       int len = sprintf(msg,"MS Since last issue :%d Temp =%f Vbat = %f vref = %f\n\r",tick,temp,vbat,vref );
-	 	  HAL_UART_Transmit(&huart3, msg,len , 100);
+	 	 // HAL_UART_Transmit(&huart3, msg,len , 100);
 	 	  cnt++;
 
 
@@ -299,6 +343,114 @@ void ADCPoll_Init(void *argument)
     osDelay(1);
   }
   /* USER CODE END ADCPoll_Init */
+}
+
+/* USER CODE BEGIN Header_PSFunctions_Init */
+/**
+* @brief Function implementing the PSFunctions thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_PSFunctions_Init */
+void PSFunctions_Init(void *argument)
+{
+    HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+
+    servo_t STR;
+    STR.rawMIN=100;
+    STR.rawMAX=200;
+    STR.degMAX = 100;
+    STR.chl= 3;
+    STR.htim = &htim2;
+
+
+    traxxasESC_t LED;
+    LED.reverseLockOut=notCleared;
+    LED.state =UnArmed;
+    LED.rawMIN=0;
+    LED.rawMAX=TIM12->ARR;
+    LED.MAXIMUMOVERDRIVE = 100;
+    LED.direction=Forward;
+    LED.PWM_CHNL= 1;
+    LED.htim = &htim12;
+
+    traxxasESC_t ESC;
+    ESC.reverseLockOut=notCleared;
+    ESC.state =UnArmed;
+    ESC.rawMIN=100;
+    ESC.rawMAX=200;
+    ESC.MAXIMUMOVERDRIVE = 100;
+    ESC.direction=Forward;
+    ESC.PWM_CHNL= 4;
+    ESC.htim = &htim2;
+
+
+
+    int cnt = -100;
+  /* USER CODE BEGIN PSFunctions_Init */
+  /* Infinite loop */
+  for(;;)
+  {
+
+      /*while(ESC.state != Armed){
+          armESC_RTOS(&ESC);
+      }*/
+
+      revsereLockout_clear(&ESC);
+    while( cnt <= 100){
+
+        setPower(&LED, cnt,Arming);
+        cnt++;
+        osDelay(5);
+    }
+    while(cnt >= -100){
+        setPower(&LED, cnt,Arming);
+        cnt--;
+        osDelay(5);
+    }
+
+
+      osDelay(5);
+  }
+  /* USER CODE END PSFunctions_Init */
+}
+
+/* USER CODE BEGIN Header_SSFunctions_Init */
+/**
+* @brief Function implementing the SSFunctions thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_SSFunctions_Init */
+void SSFunctions_Init(void *argument)
+{
+  /* USER CODE BEGIN SSFunctions_Init */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END SSFunctions_Init */
+}
+
+/* USER CODE BEGIN Header_DSFunctions_Init */
+/**
+* @brief Function implementing the DSFunctions thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_DSFunctions_Init */
+void DSFunctions_Init(void *argument)
+{
+  /* USER CODE BEGIN DSFunctions_Init */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END DSFunctions_Init */
 }
 
 /* Private application code --------------------------------------------------*/

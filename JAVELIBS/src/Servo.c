@@ -8,37 +8,27 @@
 #include "Servo.h"
 
 
-static int SERVOMAX = 180;
-static int SERVOMIN = 0;
+void servo_Set(servo_t *servo, int deg) {
+    deg += servo->degMAX; // centers requested degree from -degMAX to degMAX to 0 - 2*degreeMAX
 
-static int SERVOFACTOR = 7;
+    if (0 <= deg && deg <= 2 * servo->degMAX) {
 
-void Servo_Set(TIM_HandleTypeDef *htim, uint8_t chl, int deg){
-
-
-	deg+=90;
-
-	if(deg <= SERVOMAX && deg >= SERVOMIN){
-
-
-		int input = (htim->Instance->ARR)*deg/SERVOMAX;
+        uint16_t value = servo->rawMIN + (((100*deg) / (2 * servo->degMAX)) * (servo->rawMAX - servo->rawMIN))/100;
+        volatile uint32_t *p = (&servo->htim->Instance->CCR1);
+        p = p + servo->chl - 1;
+        *p = (uint32_t) value;
+        servo->deg = deg - servo->degMAX;
+        servo->raw = value;
+    }
 
 
-		input= input*SERVOFACTOR/100;
+}
 
-		int *p = (htim->Instance->CCR1);
+void Servo_Set_Force(TIM_HandleTypeDef *htim, uint8_t chl, uint16_t val) {
 
-		int shift = (chl-1)*0x04;
-
-
-
-
-		 *p = (uint32_t) input;
-
-	}
-
-
-
+        volatile uint32_t *p = (&htim->Instance->CCR1);
+        p = p+ (chl - 1) ;
+        *p = (uint32_t) val;
 
 }
 
