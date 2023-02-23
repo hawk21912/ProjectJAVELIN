@@ -5,6 +5,15 @@
  *      Author: joshh
  */
 
+/*
+ * servo_t STR;
+    STR.rawMIN=100;
+    STR.rawMAX=200;
+    STR.degMAX = 100;
+    STR.chl= 3;
+    STR.htim = &htim2;
+ */
+
 #include "Servo.h"
 
 

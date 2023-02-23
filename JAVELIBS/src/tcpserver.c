@@ -13,7 +13,7 @@
 #include "usart.h"
 #include "tcpserver.h"
 #include "string.h"
-#include "MSGHandler.h"
+//#include "MSGHandler.h"
 static struct netconn *conn, *newconn;
 static struct netbuf *buf;
 static ip_addr_t *addr;
@@ -66,7 +66,7 @@ static void tcp_thread(void *arg)
                             
 							strncpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
 
-							MSGReceive(msg);
+							//MSGReceive(msg);
 
 
 							// Or modify the message received, so that we can send it back to the client

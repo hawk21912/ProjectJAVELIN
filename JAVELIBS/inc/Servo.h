@@ -8,6 +8,8 @@
 #ifndef INC_SERVO_H_
 #define INC_SERVO_H_
 
+
+
 #include "main.h"
 typedef struct Servo_TypeDef{
     TIM_HandleTypeDef *htim; //Timer used

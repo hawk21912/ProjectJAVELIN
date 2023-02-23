@@ -35,7 +35,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_9a572 && [1/2] Building C object CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_4244b && [1/2] Building C object CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj
 Using built-in specs.
 COLLECT_GCC=C:\msys64\mingw64\bin\arm-none-eabi-gcc.exe
 Target: arm-none-eabi
@@ -43,8 +43,8 @@ Configured with: ../configure --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw
 Thread model: single
 Supported LTO compression algorithms: zlib zstd
 gcc version 10.1.0 (GCC) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
- c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj -version -o C:\Users\joshh\AppData\Local\Temp\cco0X9ye.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
+ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj -version -o C:\Users\joshh\AppData\Local\Temp\ccFbsZnD.s
 GNU C17 (GCC) version 10.1.0 (arm-none-eabi)
 	compiled by GNU C version 10.3.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
 
@@ -65,13 +65,13 @@ GNU C17 (GCC) version 10.1.0 (arm-none-eabi)
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: d420a368262f2e1a3ca49968a595e005
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
- c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj C:\Users\joshh\AppData\Local\Temp\cco0X9ye.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
+ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj C:\Users\joshh\AppData\Local\Temp\ccFbsZnD.s
 GNU assembler version 2.38 (arm-none-eabi) using BFD version (GNU Binutils) 2.38
 COMPILER_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/;c:/msys64/mingw64/bin/../lib/gcc/;c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/
 LIBRARY_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/;c:/msys64/mingw64/bin/../lib/gcc/;c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
-[2/2] Linking C static library libcmTC_9a572.a
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
+[2/2] Linking C static library libcmTC_4244b.a
 
 
 
@@ -92,7 +92,7 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(arm-none-eabi-ld\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_9a572 && [1/2] Building C object CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj]
+  ignore line: [Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_4244b && [1/2] Building C object CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=C:\msys64\mingw64\bin\arm-none-eabi-gcc.exe]
   ignore line: [Target: arm-none-eabi]
@@ -100,8 +100,8 @@ Parsed C implicit link information from above output:
   ignore line: [Thread model: single]
   ignore line: [Supported LTO compression algorithms: zlib zstd]
   ignore line: [gcc version 10.1.0 (GCC) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
-  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj -version -o C:\Users\joshh\AppData\Local\Temp\cco0X9ye.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
+  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj -version -o C:\Users\joshh\AppData\Local\Temp\ccFbsZnD.s]
   ignore line: [GNU C17 (GCC) version 10.1.0 (arm-none-eabi)]
   ignore line: [	compiled by GNU C version 10.3.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
   ignore line: []
@@ -122,8 +122,8 @@ Parsed C implicit link information from above output:
   ignore line: []
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: d420a368262f2e1a3ca49968a595e005]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
-  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj C:\Users\joshh\AppData\Local\Temp\cco0X9ye.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
+  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj C:\Users\joshh\AppData\Local\Temp\ccFbsZnD.s]
   ignore line: [GNU assembler version 2.38 (arm-none-eabi) using BFD version (GNU Binutils) 2.38]
   ignore line: [COMPILER_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/]
   ignore line: [c:/msys64/mingw64/bin/../lib/gcc/]
@@ -131,8 +131,8 @@ Parsed C implicit link information from above output:
   ignore line: [LIBRARY_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/]
   ignore line: [c:/msys64/mingw64/bin/../lib/gcc/]
   ignore line: [c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_9a572.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
-  ignore line: [[2/2] Linking C static library libcmTC_9a572.a]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4244b.dir/CMakeCCompilerABI.c.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
+  ignore line: [[2/2] Linking C static library libcmTC_4244b.a]
   ignore line: []
   ignore line: []
   implicit libs: []
@@ -144,7 +144,7 @@ Parsed C implicit link information from above output:
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_b8975 && [1/2] Building CXX object CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj
+Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_4a1d1 && [1/2] Building CXX object CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj
 Using built-in specs.
 COLLECT_GCC=C:\msys64\mingw64\bin\arm-none-eabi-g++.exe
 Target: arm-none-eabi
@@ -152,8 +152,8 @@ Configured with: ../configure --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw
 Thread model: single
 Supported LTO compression algorithms: zlib zstd
 gcc version 10.1.0 (GCC) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
- c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1plus.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj -version -o C:\Users\joshh\AppData\Local\Temp\ccgcaxMZ.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
+ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1plus.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj -version -o C:\Users\joshh\AppData\Local\Temp\ccNxuiiU.s
 GNU C++14 (GCC) version 10.1.0 (arm-none-eabi)
 	compiled by GNU C version 10.3.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
 
@@ -180,13 +180,13 @@ GNU C++14 (GCC) version 10.1.0 (arm-none-eabi)
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: f441fb8487906b2fff5dc03e3518b574
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
- c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj C:\Users\joshh\AppData\Local\Temp\ccgcaxMZ.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
+ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj C:\Users\joshh\AppData\Local\Temp\ccNxuiiU.s
 GNU assembler version 2.38 (arm-none-eabi) using BFD version (GNU Binutils) 2.38
 COMPILER_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/;c:/msys64/mingw64/bin/../lib/gcc/;c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/
 LIBRARY_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/;c:/msys64/mingw64/bin/../lib/gcc/;c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
-[2/2] Linking CXX static library libcmTC_b8975.a
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t'
+[2/2] Linking CXX static library libcmTC_4a1d1.a
 
 
 
@@ -213,7 +213,7 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(arm-none-eabi-ld\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_b8975 && [1/2] Building CXX object CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj]
+  ignore line: [Run Build Command(s):C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe cmTC_4a1d1 && [1/2] Building CXX object CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=C:\msys64\mingw64\bin\arm-none-eabi-g++.exe]
   ignore line: [Target: arm-none-eabi]
@@ -221,8 +221,8 @@ Parsed CXX implicit link information from above output:
   ignore line: [Thread model: single]
   ignore line: [Supported LTO compression algorithms: zlib zstd]
   ignore line: [gcc version 10.1.0 (GCC) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
-  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1plus.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj -version -o C:\Users\joshh\AppData\Local\Temp\ccgcaxMZ.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
+  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/cc1plus.exe -quiet -v -iprefix c:\msys64\mingw64\bin\../lib/gcc/arm-none-eabi/10.1.0/ -D__USES_INITFINI__ C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mcpu=arm7tdmi -mfloat-abi=soft -marm -march=armv4t -auxbase-strip CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj -version -o C:\Users\joshh\AppData\Local\Temp\ccNxuiiU.s]
   ignore line: [GNU C++14 (GCC) version 10.1.0 (arm-none-eabi)]
   ignore line: [	compiled by GNU C version 10.3.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
   ignore line: []
@@ -249,8 +249,8 @@ Parsed CXX implicit link information from above output:
   ignore line: []
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: f441fb8487906b2fff5dc03e3518b574]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
-  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj C:\Users\joshh\AppData\Local\Temp\ccgcaxMZ.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
+  ignore line: [ c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/bin/as.exe -v -march=armv4t -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj C:\Users\joshh\AppData\Local\Temp\ccNxuiiU.s]
   ignore line: [GNU assembler version 2.38 (arm-none-eabi) using BFD version (GNU Binutils) 2.38]
   ignore line: [COMPILER_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/]
   ignore line: [c:/msys64/mingw64/bin/../lib/gcc/]
@@ -258,8 +258,8 @@ Parsed CXX implicit link information from above output:
   ignore line: [LIBRARY_PATH=c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/]
   ignore line: [c:/msys64/mingw64/bin/../lib/gcc/]
   ignore line: [c:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/10.1.0/../../../../arm-none-eabi/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_b8975.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
-  ignore line: [[2/2] Linking CXX static library libcmTC_b8975.a]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_4a1d1.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mcpu=arm7tdmi' '-mfloat-abi=soft' '-marm' '-march=armv4t']
+  ignore line: [[2/2] Linking CXX static library libcmTC_4a1d1.a]
   ignore line: []
   ignore line: []
   implicit libs: []

@@ -29,7 +29,6 @@
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
-#include "TraxxasESC.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -144,16 +143,12 @@ int main(void)
   /* Start scheduler */
   osKernelStart();
 
-
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
-
-
 
     /* USER CODE BEGIN 3 */
   }

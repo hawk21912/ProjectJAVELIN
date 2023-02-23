@@ -5,6 +5,21 @@
 //
 // Created by joshh on 10/20/2022.
 //
+
+/*setup example
+ *
+ *
+ * traxxasESC_t ESC;
+    ESC.reverseLockOut=notCleared;
+    ESC.state =UnArmed;
+    ESC.rawMIN=100;
+    ESC.rawMAX=200;
+    ESC.MAXIMUMOVERDRIVE = 100;
+    ESC.direction=Forward;
+    ESC.PWM_CHNL= 4;
+    ESC.htim = &htim2;
+ *
+ */
 void setPower(traxxasESC_t *ESC, int power, int dir) {
 
     static int prevDir = Arming;
@@ -22,7 +37,9 @@ void setPower(traxxasESC_t *ESC, int power, int dir) {
         volatile uint32_t *p = (&ESC->htim->Instance->CCR1);
         p = p + chnl - 1;
         *p = (uint32_t) val;
+        ESC->raw = *p;
     }
+
     char msg[100];
     int len = sprintf(msg, "pwm set to %d\n\r", val);
     HAL_UART_Transmit(&huart3, msg, len, 100);
@@ -38,7 +55,7 @@ void revsereLockout_clear(traxxasESC_t *ESC) {
         osDelay(200);
         setPower(ESC, 0, Arming);
         osDelay(200);
-        setPower(ESC, -15, Arming);
+        setPower(ESC, 0, Arming);
         osDelay(200);
         ESC->reverseLockOut = cleared;
     }

@@ -32,6 +32,7 @@
 #include "adc.h"
 #include "TraxxasESC.h"
 #include "Servo.h"
+#include "MSGHandler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,11 +103,16 @@ const osThreadAttr_t DSFunctions_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for RX_msg_queue */
-osMessageQueueId_t RX_msg_queueHandle;
-const osMessageQueueAttr_t RX_msg_queue_attributes = {
-  .name = "RX_msg_queue"
+/* Definitions for MSGProcess */
+osThreadId_t MSGProcessHandle;
+const osThreadAttr_t MSGProcess_attributes = {
+  .name = "MSGProcess",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for RX_msg_queue */
+
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -120,6 +126,7 @@ void ADCPoll_Init(void *argument);
 void PSFunctions_Init(void *argument);
 void SSFunctions_Init(void *argument);
 void DSFunctions_Init(void *argument);
+void MSGProcess_Init(void *argument);
 
 extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -165,7 +172,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* creation of RX_msg_queue */
-  RX_msg_queueHandle = osMessageQueueNew (32, sizeof(uint16_t), &RX_msg_queue_attributes);
+
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -192,6 +199,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of DSFunctions */
   DSFunctionsHandle = osThreadNew(DSFunctions_Init, NULL, &DSFunctions_attributes);
+
+  /* creation of MSGProcess */
+  MSGProcessHandle = osThreadNew(MSGProcess_Init, NULL, &MSGProcess_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -244,26 +254,13 @@ void Blink_Init(void *argument)
 {
   /* USER CODE BEGIN Blink_Init */
   /* Infinite loop */
-    float tempcal = (TEMPSENSOR_CAL2_TEMP-TEMPSENSOR_CAL1_TEMP) /( (uint32_t) *TEMPSENSOR_CAL2_ADDR)  -   (uint32_t) *TEMPSENSOR_CAL1_ADDR)   ) ;
-
-	int cnt = 0;
-		  char msg[100];
-		uint32_t tick;
-  //  HAL_ADC_Start(&hadc3);
-  //  HAL_ADC_PollForConversion(&hadc3, 100);
-  float vref,vbat,temp;
+    JAVMSG_t Msg;
   for(;;)
   {
-	  tick=  osKernelGetTickCount();
-    //  adcval = HAL_ADC_GetValue(&hadc3);
-    vref= adcval[2]*4*3.3/65536;
-    vbat = adcval[1]*4*3.3/65536;
-    temp = .02*(adcval[0]-(uint32_t) *TEMPSENSOR_CAL2_ADDR) )+30;
-	 // int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
-      int len = sprintf(msg,"MS Since last issue :%d Temp =%f Vbat = %f vref = %f\n\r",tick,temp,vbat,vref );
-	 	 // HAL_UART_Transmit(&huart3, msg,len , 100);
-	 	  cnt++;
 
+    while(osMessageQueueGetCount(RX_msg_queueHandle) >= 0){
+
+    }
 
     osDelay(1000);
   }
@@ -354,6 +351,7 @@ void ADCPoll_Init(void *argument)
 /* USER CODE END Header_PSFunctions_Init */
 void PSFunctions_Init(void *argument)
 {
+  /* USER CODE BEGIN PSFunctions_Init */
     HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
@@ -389,7 +387,6 @@ void PSFunctions_Init(void *argument)
 
 
     int cnt = -100;
-  /* USER CODE BEGIN PSFunctions_Init */
   /* Infinite loop */
   for(;;)
   {
@@ -451,6 +448,24 @@ void DSFunctions_Init(void *argument)
     osDelay(1);
   }
   /* USER CODE END DSFunctions_Init */
+}
+
+/* USER CODE BEGIN Header_MSGProcess_Init */
+/**
+* @brief Function implementing the MSGProcess thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_MSGProcess_Init */
+void MSGProcess_Init(void *argument)
+{
+  /* USER CODE BEGIN MSGProcess_Init */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END MSGProcess_Init */
 }
 
 /* Private application code --------------------------------------------------*/
