@@ -32,6 +32,7 @@
 #include "adc.h"
 #include "TraxxasESC.h"
 #include "Servo.h"
+#include "MSGHandler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,10 +104,7 @@ const osThreadAttr_t DSFunctions_attributes = {
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for RX_msg_queue */
-osMessageQueueId_t RX_msg_queueHandle;
-const osMessageQueueAttr_t RX_msg_queue_attributes = {
-  .name = "RX_msg_queue"
-};
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -165,7 +163,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* creation of RX_msg_queue */
-  RX_msg_queueHandle = osMessageQueueNew (32, sizeof(uint16_t), &RX_msg_queue_attributes);
+
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -223,8 +221,19 @@ void StartDefaultTask(void *argument)
 
   for(;;)
   {
+  /*    JAVMSG_t MSG;
+      MSG.id = 0x12;
+      MSG.Byte2 = 0x01;
+      MSG.Byte3 = 0x01;
+      MSG.Byte4 = 0x01;
+      MSG.Byte5 = 0x01;
+      MSG.Byte6 = 0x01;
+      MSG.Byte7 = 0x01;
+      MSG.Byte8 = 0x01;
 
-    osDelay(1000);
+    //  osMessageQueuePut(RX_msg_queueHandle,&MSG,0,0);
+    //  osThreadYield();*/
+      osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -244,25 +253,33 @@ void Blink_Init(void *argument)
 {
   /* USER CODE BEGIN Blink_Init */
   /* Infinite loop */
-    float tempcal = (TEMPSENSOR_CAL2_TEMP-TEMPSENSOR_CAL1_TEMP) /( (uint32_t) *TEMPSENSOR_CAL2_ADDR)  -   (uint32_t) *TEMPSENSOR_CAL1_ADDR)   ) ;
+    //float tempcal = (TEMPSENSOR_CAL2_TEMP-TEMPSENSOR_CAL1_TEMP) /( (uint32_t) *TEMPSENSOR_CAL2_ADDR)  -   (uint32_t) *TEMPSENSOR_CAL1_ADDR)   ) ;
 
-	int cnt = 0;
-		  char msg[100];
-		uint32_t tick;
-  //  HAL_ADC_Start(&hadc3);
-  //  HAL_ADC_PollForConversion(&hadc3, 100);
-  float vref,vbat,temp;
+	uint32_t cnt = 1;
+    char msg[100];
+    uint32_t tick;
+    float vref,vbat,temp;
+    osDelay(1000);
+    MSGinit();
+
+
+    JAVMSG_t jav;
+
+
   for(;;)
   {
 	  tick=  osKernelGetTickCount();
-    //  adcval = HAL_ADC_GetValue(&hadc3);
-    vref= adcval[2]*4*3.3/65536;
-    vbat = adcval[1]*4*3.3/65536;
-    temp = .02*(adcval[0]-(uint32_t) *TEMPSENSOR_CAL2_ADDR) )+30;
 	 // int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
-      int len = sprintf(msg,"MS Since last issue :%d Temp =%f Vbat = %f vref = %f\n\r",tick,temp,vbat,vref );
-	 	 // HAL_UART_Transmit(&huart3, msg,len , 100);
-	 	  cnt++;
+      //nt len = sprintf(msg,"MS Since last issue :%d Temp =%f Vbat = %f vref = %f\n\r",tick,temp,vbat,vref );
+
+      cnt = osMessageQueueGetCount(RX_msg_queueHandle);
+      int len = sprintf(msg,"uptime (ms) %d | queue length = %d |\n\r",tick ,cnt);
+      HAL_UART_Transmit(&huart3, msg,len , 100);
+      MSGHandleLoop();
+
+
+
+
 
 
     osDelay(1000);
@@ -270,7 +287,7 @@ void Blink_Init(void *argument)
   /* USER CODE END Blink_Init */
 }
 
-/* USER CODE BEGIN Header_IDWGTrigger_Init */
+/* USER CODE BEGIN Header_IDWGTrigger_InitosThreadYield();  */
 /**
 * @brief Function implementing the IDWGTrigger thread.
 * @param argument: Not used
@@ -283,8 +300,10 @@ void IDWGTrigger_Init(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  HAL_IWDG_Refresh(&hiwdg1);
+      HAL_IWDG_Refresh(&hiwdg1);
     osDelay(1);
+
+
   }
   /* USER CODE END IDWGTrigger_Init */
 }
@@ -354,41 +373,6 @@ void ADCPoll_Init(void *argument)
 /* USER CODE END Header_PSFunctions_Init */
 void PSFunctions_Init(void *argument)
 {
-    HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
-    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
-
-    servo_t STR;
-    STR.rawMIN=100;
-    STR.rawMAX=200;
-    STR.degMAX = 100;
-    STR.chl= 3;
-    STR.htim = &htim2;
-
-
-    traxxasESC_t LED;
-    LED.reverseLockOut=notCleared;
-    LED.state =UnArmed;
-    LED.rawMIN=0;
-    LED.rawMAX=TIM12->ARR;
-    LED.MAXIMUMOVERDRIVE = 100;
-    LED.direction=Forward;
-    LED.PWM_CHNL= 1;
-    LED.htim = &htim12;
-
-    traxxasESC_t ESC;
-    ESC.reverseLockOut=notCleared;
-    ESC.state =UnArmed;
-    ESC.rawMIN=100;
-    ESC.rawMAX=200;
-    ESC.MAXIMUMOVERDRIVE = 100;
-    ESC.direction=Forward;
-    ESC.PWM_CHNL= 4;
-    ESC.htim = &htim2;
-
-
-
-    int cnt = -100;
   /* USER CODE BEGIN PSFunctions_Init */
   /* Infinite loop */
   for(;;)
@@ -398,18 +382,6 @@ void PSFunctions_Init(void *argument)
           armESC_RTOS(&ESC);
       }*/
 
-      revsereLockout_clear(&ESC);
-    while( cnt <= 100){
-
-        setPower(&LED, cnt,Arming);
-        cnt++;
-        osDelay(5);
-    }
-    while(cnt >= -100){
-        setPower(&LED, cnt,Arming);
-        cnt--;
-        osDelay(5);
-    }
 
 
       osDelay(5);

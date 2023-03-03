@@ -14,6 +14,7 @@
 #include "tcpserver.h"
 #include "string.h"
 #include "MSGHandler.h"
+#include "cmsis_os.h"
 static struct netconn *conn, *newconn;
 static struct netbuf *buf;
 static ip_addr_t *addr;
@@ -63,10 +64,21 @@ static void tcp_thread(void *arg)
 						/* If there is some data remaining to be sent, the following process will continue */
 						do
 						{
-                            
+
+
 							strncpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
 
-							MSGReceive(msg);
+
+                            JAVMSG_t jav;
+                            jav.id    = msg[0];
+                            jav.Byte2 = msg[1];
+                            jav.Byte3 = msg[2];
+                            jav.Byte4 = msg[3];
+                            jav.Byte5 = msg[4];
+                            jav.Byte6 = msg[5];
+                            jav.Byte7 = msg[6];
+                            jav.Byte8 = msg[7];
+                            osMessageQueuePut(RX_msg_queueHandle,  &jav, 0, 0);
 
 
 							// Or modify the message received, so that we can send it back to the client
