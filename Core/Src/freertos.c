@@ -108,7 +108,16 @@ const osThreadAttr_t DSFunctions_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+osThreadId_t MSGHandleThread;
+const osThreadAttr_t MSGHandleThread_attributes = {
+        .name = "MSGHandleThread",
+        .stack_size = 128*4,
+        .priority = (osPriority_t) osPriorityLow,
 
+};
+
+
+void MSGHandleThread_init(void *argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -193,6 +202,7 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  MSGHandleThread = osThreadNew((MSGHandleThread_init,NULL,&MSGHandleThread_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -261,8 +271,6 @@ void Blink_Init(void *argument)
     float vref,vbat,temp;
     osDelay(1000);
 
-
-    JAVMSG_t jav;
 
 
   for(;;)
@@ -469,6 +477,17 @@ void DSFunctions_Init(void *argument)
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
+void MSGHandleThread_init(void *argument){
 
+
+
+    for(;;)
+    {
+        MSGinit();
+        JAVMSG_t jav;
+        osDelay(1);
+
+    }
+}
 /* USER CODE END Application */
 
