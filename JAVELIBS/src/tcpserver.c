@@ -66,7 +66,7 @@ static void tcp_thread(void *arg)
 						{
 
 
-							strncpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
+							memcpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
 
 
                             JAVMSG_t jav;
@@ -79,11 +79,11 @@ static void tcp_thread(void *arg)
                             jav.Byte7 = msg[6];
                             jav.Byte8 = msg[7];
                             osMessageQueuePut(RX_msg_queueHandle,  &jav, 0, 0);
-
+                            lastRecMsg = osKernelGetTickCount();
 
 							// Or modify the message received, so that we can send it back to the client
-							int len = sprintf (smsg, "\"%s\" was sent by PROJECT JAVELIN\n", msg);
-								HAL_UART_Transmit(&huart3,smsg,len,100);
+							int len = sprintf (smsg, "\"%s\" was sent by PROJECT JAVELIN\n\r", msg);
+								//HAL_UART_Transmit(&huart3,smsg,len,100);
 							netconn_write(newconn, smsg, len, NETCONN_COPY);  // send the message back to the client
 							memset (msg, '\0', 100);  // clear the buffer
 						}

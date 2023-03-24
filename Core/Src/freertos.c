@@ -260,7 +260,6 @@ void Blink_Init(void *argument)
     uint32_t tick;
     float vref,vbat,temp;
     osDelay(1000);
-    MSGinit();
 
 
     JAVMSG_t jav;
@@ -275,7 +274,7 @@ void Blink_Init(void *argument)
       cnt = osMessageQueueGetCount(RX_msg_queueHandle);
       int len = sprintf(msg,"uptime (ms) %d | queue length = %d |\n\r",tick ,cnt);
       HAL_UART_Transmit(&huart3, msg,len , 100);
-      MSGHandleLoop();
+
 
 
 
@@ -329,6 +328,7 @@ void ADC_ChnlSel(ADC_HandleTypeDef *hadc, int Chnl){
         Error_Handler();
     }
 
+
 }
 
 /**
@@ -370,21 +370,49 @@ void ADCPoll_Init(void *argument)
 * @param argument: Not used
 * @retval None
 */
+
+
+
 /* USER CODE END Header_PSFunctions_Init */
 void PSFunctions_Init(void *argument)
 {
   /* USER CODE BEGIN PSFunctions_Init */
   /* Infinite loop */
+
+
+    STR.rawMIN=130;
+    STR.rawMAX=170;
+    STR.degMAX = 90;
+    STR.chl= 3;
+    STR.htim = &htim2;
+    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
+
+    LED.reverseLockOut=notCleared;
+    LED.state =UnArmed;
+    LED.rawMIN=0;
+    LED.rawMAX=TIM12->ARR;
+    LED.MAXIMUMOVERDRIVE = 100;
+    LED.direction=Forward;
+    LED.PWM_CHNL= 1;
+    LED.htim = &htim12;
+
+    DRV.reverseLockOut=notCleared;
+    DRV.state =UnArmed;
+    DRV.msgPwr=0;
+    DRV.rawMIN=100;
+    DRV.rawMAX=200;
+    DRV.MAXIMUMOVERDRIVE = 100;
+    DRV.direction=Forward;
+    DRV.PWM_CHNL= 4;
+    DRV.htim = &htim2; //PWM2
+    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+    armESC_RTOS(&DRV);
+
   for(;;)
   {
-
-      /*while(ESC.state != Armed){
-          armESC_RTOS(&ESC);
-      }*/
-
-
-
-      osDelay(5);
+      setPower(&DRV,DRV.msgPwr,Arming);
+      servo_Set(&STR,STR.degMSG);
+      osDelay(1);
   }
   /* USER CODE END PSFunctions_Init */
 }
@@ -396,13 +424,17 @@ void PSFunctions_Init(void *argument)
 * @retval None
 */
 /* USER CODE END Header_SSFunctions_Init */
+
 void SSFunctions_Init(void *argument)
 {
   /* USER CODE BEGIN SSFunctions_Init */
+
+
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+
   }
   /* USER CODE END SSFunctions_Init */
 }
@@ -418,9 +450,18 @@ void DSFunctions_Init(void *argument)
 {
   /* USER CODE BEGIN DSFunctions_Init */
   /* Infinite loop */
+    MSGinit();
   for(;;)
   {
-    osDelay(1);
+      lastRecMsg = 0;
+      if(  osKernelGetTickCount() > lastRecMsg +2000){
+          //DRV.msgPwr = 0;
+          //setPower(&DRV,0,Arming);
+      }
+      osDelay(1);
+
+      MSGHandleLoop();
+    //osDelay(1);
   }
   /* USER CODE END DSFunctions_Init */
 }

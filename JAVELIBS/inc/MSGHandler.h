@@ -18,5 +18,6 @@ void MSGReceive(JAVMSG_t msg);
 void MSGHandleLoop();
 void MSGinit();
 extern int johnny;
+extern uint32_t lastRecMsg;
 extern osMessageQueueId_t RX_msg_queueHandle;
 extern osMessageQueueAttr_t RX_msg_queue_attributes;

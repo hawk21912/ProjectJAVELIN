@@ -5,8 +5,13 @@
 //
 // Created by joshh on 10/20/2022.
 //
-void setPower(traxxasESC_t *ESC, int power, int dir) {
 
+traxxasESC_t DRV;
+traxxasESC_t LED;
+
+
+void setPower(traxxasESC_t *ESC, int power, int dir) {
+    ESC->pwr = power;
     static int prevDir = Arming;
     int chnl = ESC->PWM_CHNL;
     uint16_t val = 0;
@@ -24,8 +29,10 @@ void setPower(traxxasESC_t *ESC, int power, int dir) {
         *p = (uint32_t) val;
     }
     char msg[100];
-    int len = sprintf(msg, "pwm set to %d\n\r", val);
-    HAL_UART_Transmit(&huart3, msg, len, 100);
+    int len = sprintf(msg, "pwm set to | pwm:%d | pwr:%d\n\r", val,power);
+    ESC->raw = val;
+
+    //HAL_UART_Transmit(&huart3, msg, len, 100);
 
 }
 
@@ -78,3 +85,14 @@ void armESC_RTOS(traxxasESC_t *ESC) {
     }
 
 }
+
+
+void ESC_InputPWM(traxxasESC_t *ESC,uint16_t RT,uint16_t LT){
+
+    //pwm value is raw uint16_t
+    // TODO: set power to be based off of RT - LT and center around 0
+
+    int val = (((RT - LT)*(1000*ESC->MAXIMUMOVERDRIVE) / 255)/1000); //I HATE FLOATS!!!!!!!!!!!
+    ESC->msgPwr = val;
+}
+

@@ -12,6 +12,7 @@
 typedef struct Servo_TypeDef{
     TIM_HandleTypeDef *htim; //Timer used
     uint8_t chl;            // timer channel
+    int degMSG;
     int deg;                // current position in degrees
     uint16_t raw;           // raw value currently inputed
     uint16_t rawMAX;        // max acceptable input rawMIN - TIM->INSTANCE->ARR;
@@ -20,4 +21,7 @@ typedef struct Servo_TypeDef{
 }servo_t;
 void servo_Set(servo_t *servo, int deg);
 
+void servo_InputPWM(servo_t *servo,int PWM);
+
+extern servo_t STR;
 #endif /* INC_SERVO_H_ */

@@ -28,6 +28,7 @@ enum state{
 typedef struct TraxxasESC_TypeDef{
 
     TIM_HandleTypeDef *htim;
+    int msgPwr;
     int PWM_CHNL;
     int state;
     int pwr; //    -MAXIMUMOVERDRIVE < pwr < MAXIMUMOVERDRIVE
@@ -39,8 +40,14 @@ typedef struct TraxxasESC_TypeDef{
     int reverseLockOut;
 
 }traxxasESC_t;
+
+
+extern traxxasESC_t DRV;
+extern traxxasESC_t LED;
+
 void revsereLockout_clear( traxxasESC_t *ESC);
 void setPower(traxxasESC_t *ESC,int power,int dir);
 void armESC_RTOS(traxxasESC_t *ESC);
 void armESC(traxxasESC_t *ESC);
+void ESC_InputPWM(traxxasESC_t *ESC,uint16_t RT,uint16_t LT);
 #endif //JAVELIN_TRAXXASESC_H
