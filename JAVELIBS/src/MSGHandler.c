@@ -57,6 +57,7 @@ void MSGReceive(JAVMSG_t msg){
 	switch( msg.id){
         case 0xa1:
             HAL_GPIO_WritePin(GPIOB, LD1_Pin, msg.Byte2 != 0);
+            HAL_GPIO_WritePin(RELAY_GPIO_Port,RELAY_Pin,msg.Byte2 != 0);
             break;
 
         case 0xa3:;
