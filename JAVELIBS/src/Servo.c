@@ -9,6 +9,8 @@
 #include "Servo.h"
 #include "usart.h"
 servo_t STR;
+
+
 void servo_Set(servo_t *servo, int deg) {
     servo->deg = deg;
 

@@ -6,6 +6,7 @@
 #include "stdio.h"
 #include "TraxxasESC.h"
 #include "Servo.h"
+#include "stepper.h"
 
 osMessageQueueId_t RX_msg_queueHandle;
 osMessageQueueAttr_t RX_msg_queue_attributes;
@@ -47,6 +48,9 @@ memset(&msg, 0, sizeof(msg)); //resets struct to 0
 uint16_t PWMRT;
 uint16_t PWMLT;
 int governer = 4;
+
+
+
 void MSGReceive(JAVMSG_t msg){
 
     char debug[100];
@@ -55,12 +59,24 @@ void MSGReceive(JAVMSG_t msg){
                       msg.id,msg.Byte2,msg.Byte3,msg.Byte4,msg.Byte5,msg.Byte6,msg.Byte7,msg.Byte8);
     //HAL_UART_Transmit(&huart3,debug,len,10);
 	switch( msg.id){
-        case 0xa1:
+        case 0xa1: //RELAY
             HAL_GPIO_WritePin(GPIOB, LD1_Pin, msg.Byte2 != 0);
             HAL_GPIO_WritePin(RELAY_GPIO_Port,RELAY_Pin,msg.Byte2 != 0);
             break;
 
-        case 0xa3:;
+        case 0xa2:
+
+            if( msg.Byte2 ==1){
+                SRC.des = 100000;
+            } else if(msg.Byte2 ==2){
+                SRC.des = -100000;
+            } else{
+                SRC.des = SRC.pos;
+            }
+
+            break;
+
+        case 0xa3:; //STEER SERVO
             uint16_t PWMVAL = (msg.Byte2<< 8) | msg.Byte3;
             TIM12->CCR1 = PWMVAL;
             PWMVAL = (msg.Byte4<< 8) | msg.Byte5;

@@ -381,10 +381,11 @@ void PSFunctions_Init(void *argument)
 
 
     STR.rawMIN=130;
-    STR.rawMAX=170;
+    STR.rawMAX=190;
     STR.degMAX = 90;
     STR.chl= 3;
     STR.htim = &htim2;
+    STR.degMSG = 0;
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
 
     LED.reverseLockOut=notCleared;
@@ -451,12 +452,13 @@ void DSFunctions_Init(void *argument)
   /* USER CODE BEGIN DSFunctions_Init */
   /* Infinite loop */
     MSGinit();
+    lastRecMsg = 0;
   for(;;)
   {
-      lastRecMsg = 0;
+
       if(  osKernelGetTickCount() > lastRecMsg +2000){
-          //DRV.msgPwr = 0;
-          //setPower(&DRV,0,Arming);
+          DRV.msgPwr = 0;
+          setPower(&DRV,0,Arming);
       }
       osDelay(1);
 
