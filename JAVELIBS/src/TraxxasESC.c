@@ -16,13 +16,9 @@ void setPower(traxxasESC_t *ESC, int power, int dir) {
     int chnl = ESC->PWM_CHNL;
     uint16_t val = 0;
 
-    /*  if(prevDir != dir && dir == Reverse && ESC->reverseLockOut != cleared){
-      } else if(prevDir != dir && dir == Forward){
-          ESC->reverseLockOut = notCleared;
-      }
-  */
     power += ESC->MAXIMUMOVERDRIVE;
     val = ESC->rawMIN + (((100 * power) / (2 * ESC->MAXIMUMOVERDRIVE)) * (ESC->rawMAX - ESC->rawMIN)) / 100;
+
     if (chnl > 0 && chnl < 14) {
         volatile uint32_t *p = (&ESC->htim->Instance->CCR1);
         p = p + chnl - 1;

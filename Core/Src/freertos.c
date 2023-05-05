@@ -33,6 +33,7 @@
 #include "TraxxasESC.h"
 #include "Servo.h"
 #include "MSGHandler.h"
+#include "stepper.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,6 +109,12 @@ const osThreadAttr_t DSFunctions_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+osThreadId_t MSGProcessHandle;
+const osThreadAttr_t MSGProcess_attributes = {
+    .name ="MSGProcess",
+    .stack_size = 128*4,
+    .priority = (osPriority_t) osPriorityLow,
+};
 
 /* USER CODE END FunctionPrototypes */
 
@@ -119,6 +126,7 @@ void PSFunctions_Init(void *argument);
 void SSFunctions_Init(void *argument);
 void DSFunctions_Init(void *argument);
 
+
 extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -127,6 +135,7 @@ void configureTimerForRunTimeStats(void);
 unsigned long getRunTimeCounterValue(void);
 
 /* USER CODE BEGIN 1 */
+void MSGProcess_Init(void *argument);
 /* Functions needed when configGENERATE_RUN_TIME_STATS is on */
 __weak void configureTimerForRunTimeStats(void)
 {
@@ -193,6 +202,7 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  MSGProcessHandle = osThreadNew(MSGProcess_Init,NULL,&MSGProcess_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -380,8 +390,8 @@ void PSFunctions_Init(void *argument)
   /* Infinite loop */
 
 
-    STR.rawMIN=130;
-    STR.rawMAX=190;
+    STR.rawMIN=120;
+    STR.rawMAX=200;
     STR.degMAX = 90;
     STR.chl= 3;
     STR.htim = &htim2;
@@ -451,19 +461,29 @@ void DSFunctions_Init(void *argument)
 {
   /* USER CODE BEGIN DSFunctions_Init */
   /* Infinite loop */
-    MSGinit();
-    lastRecMsg = 0;
+
+    SRC.pos =0;
+    SRC.des =0;
+    SRC.StepPort =STEP1_step_GPIO_Port;
+    SRC.StepPin = STEP1_step_Pin;
+    SRC.DirPort = STEP1_Dir_GPIO_Port;
+    SRC.DirPin =STEP1_Dir_Pin;
+    SRC.EnPort = STEP1_EN_GPIO_Port;
+    SRC.EnPin =STEP1_EN_Pin;
+    SRC.enabled = 0;
+    SRC.dir = 0;
+    SRC.state = 0;
+    SRC.step = 0;
+
   for(;;)
   {
 
-      if(  osKernelGetTickCount() > lastRecMsg +2000){
-          DRV.msgPwr = 0;
-          setPower(&DRV,0,Arming);
-      }
-      osDelay(1);
+    //  StepUpdate(&SRC,SRC.des);
+     // StepUpdate(&SRN,SRN.des);
 
-      MSGHandleLoop();
-    //osDelay(1);
+
+
+    osDelay(1);
   }
   /* USER CODE END DSFunctions_Init */
 }
@@ -472,5 +492,22 @@ void DSFunctions_Init(void *argument)
 /* USER CODE BEGIN Application */
 
 
+
+
+void MSGProcess_Init(void *argument){
+
+    MSGinit();
+    lastRecMsg = 0;
+    for(;;){
+
+        if(  osKernelGetTickCount() > lastRecMsg +2000){
+            DRV.msgPwr = 0;
+            setPower(&DRV,0,Arming);
+        }
+        osDelay(1);
+
+        MSGHandleLoop();
+    }
+}
 /* USER CODE END Application */
 
