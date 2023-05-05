@@ -7,17 +7,47 @@
 
 
 #include "tim.h"
+#include "cmsis_os2.h"
 
-enum DriveStates{MAXIMUMOVERDRIVE=100,NEUTRAL=0,OHSHITRUNAWAY=-100};
-typedef struct {
+enum RLO_state{
+    cleared,
+    notCleared,
+};
+enum direction{
+    Forward,
+    Reverse,
+    Arming,
+};
+
+enum state{
+    UnArmed,
+    Armed,
+
+};
+
+typedef struct TraxxasESC_TypeDef{
 
     TIM_HandleTypeDef *htim;
+    int msgPwr;
     int PWM_CHNL;
     int state;
-    int pwr;
+    int pwr; //    -MAXIMUMOVERDRIVE < pwr < MAXIMUMOVERDRIVE
+    uint16_t raw;
+    uint16_t rawMAX;
+    uint16_t rawMIN;
+    int MAXIMUMOVERDRIVE; //power range
+    int direction;    // 0 for pos 1 for neg
+    int reverseLockOut;
 
-}TraxxasESC;
+}traxxasESC_t;
 
-void setPower(TraxxasESC* ESC,int power);
-void armESC();
+
+extern traxxasESC_t DRV;
+extern traxxasESC_t LED;
+
+void revsereLockout_clear( traxxasESC_t *ESC);
+void setPower(traxxasESC_t *ESC,int power,int dir);
+void armESC_RTOS(traxxasESC_t *ESC);
+void armESC(traxxasESC_t *ESC);
+void ESC_InputPWM(traxxasESC_t *ESC,uint16_t RT,uint16_t LT);
 #endif //JAVELIN_TRAXXASESC_H

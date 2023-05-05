@@ -1,3 +1,3 @@
-C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/aaaaaaa.elf.dir
-C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/joshh/CLionProjects/JAVELIN/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/joshua/CLionProjects/ProjectJAVELIN/cmake-build-debug/CMakeFiles/aaaaaaa.elf.dir
+/home/joshua/CLionProjects/ProjectJAVELIN/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/joshua/CLionProjects/ProjectJAVELIN/cmake-build-debug/CMakeFiles/rebuild_cache.dir

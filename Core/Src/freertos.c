@@ -28,6 +28,12 @@
 #include "usart.h"
 #include "tcpserver.h"
 #include "iwdg.h"
+#include "stdio.h"
+#include "adc.h"
+#include "TraxxasESC.h"
+#include "Servo.h"
+#include "MSGHandler.h"
+#include "stepper.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +53,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+volatile uint32_t adcval[3];
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -70,15 +76,56 @@ const osThreadAttr_t IDWGTrigger_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for ADCPoll */
+osThreadId_t ADCPollHandle;
+const osThreadAttr_t ADCPoll_attributes = {
+  .name = "ADCPoll",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for PSFunctions */
+osThreadId_t PSFunctionsHandle;
+const osThreadAttr_t PSFunctions_attributes = {
+  .name = "PSFunctions",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for SSFunctions */
+osThreadId_t SSFunctionsHandle;
+const osThreadAttr_t SSFunctions_attributes = {
+  .name = "SSFunctions",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for DSFunctions */
+osThreadId_t DSFunctionsHandle;
+const osThreadAttr_t DSFunctions_attributes = {
+  .name = "DSFunctions",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for RX_msg_queue */
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+osThreadId_t MSGProcessHandle;
+const osThreadAttr_t MSGProcess_attributes = {
+    .name ="MSGProcess",
+    .stack_size = 128*4,
+    .priority = (osPriority_t) osPriorityLow,
+};
 
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
 void Blink_Init(void *argument);
 void IDWGTrigger_Init(void *argument);
+void ADCPoll_Init(void *argument);
+void PSFunctions_Init(void *argument);
+void SSFunctions_Init(void *argument);
+void DSFunctions_Init(void *argument);
+
 
 extern void MX_LWIP_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -88,6 +135,7 @@ void configureTimerForRunTimeStats(void);
 unsigned long getRunTimeCounterValue(void);
 
 /* USER CODE BEGIN 1 */
+void MSGProcess_Init(void *argument);
 /* Functions needed when configGENERATE_RUN_TIME_STATS is on */
 __weak void configureTimerForRunTimeStats(void)
 {
@@ -122,6 +170,10 @@ void MX_FREERTOS_Init(void) {
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* creation of RX_msg_queue */
+
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -136,8 +188,21 @@ void MX_FREERTOS_Init(void) {
   /* creation of IDWGTrigger */
   IDWGTriggerHandle = osThreadNew(IDWGTrigger_Init, NULL, &IDWGTrigger_attributes);
 
+  /* creation of ADCPoll */
+  ADCPollHandle = osThreadNew(ADCPoll_Init, NULL, &ADCPoll_attributes);
+
+  /* creation of PSFunctions */
+  PSFunctionsHandle = osThreadNew(PSFunctions_Init, NULL, &PSFunctions_attributes);
+
+  /* creation of SSFunctions */
+  SSFunctionsHandle = osThreadNew(SSFunctions_Init, NULL, &SSFunctions_attributes);
+
+  /* creation of DSFunctions */
+  DSFunctionsHandle = osThreadNew(DSFunctions_Init, NULL, &DSFunctions_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  MSGProcessHandle = osThreadNew(MSGProcess_Init,NULL,&MSGProcess_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -166,13 +231,28 @@ void StartDefaultTask(void *argument)
 
   for(;;)
   {
+  /*    JAVMSG_t MSG;
+      MSG.id = 0x12;
+      MSG.Byte2 = 0x01;
+      MSG.Byte3 = 0x01;
+      MSG.Byte4 = 0x01;
+      MSG.Byte5 = 0x01;
+      MSG.Byte6 = 0x01;
+      MSG.Byte7 = 0x01;
+      MSG.Byte8 = 0x01;
 
-    osDelay(1000);
+    //  osMessageQueuePut(RX_msg_queueHandle,&MSG,0,0);
+    //  osThreadYield();*/
+      osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
 }
 
 /* USER CODE BEGIN Header_Blink_Init */
+#define TEMPSENSOR_CAL1_ADDR ((uint16_t*) (0x1FF1E820U)
+#define TEMPSENSOR_CAL2_ADDR ((uint16_t*) (0x1FF1E840U)
+#define TEMPSENSOR_CAL1_TEMP (( int32_t)   30)
+#define TEMPSENSOR_CAL2_TEMP (( int32_t)  110)
 /**
 * @brief Function implementing the Blink thread.
 * @param argument: Not used
@@ -183,21 +263,40 @@ void Blink_Init(void *argument)
 {
   /* USER CODE BEGIN Blink_Init */
   /* Infinite loop */
-	int cnt = 0;
-		  char msg[50];
-		uint32_t tick;
+    //float tempcal = (TEMPSENSOR_CAL2_TEMP-TEMPSENSOR_CAL1_TEMP) /( (uint32_t) *TEMPSENSOR_CAL2_ADDR)  -   (uint32_t) *TEMPSENSOR_CAL1_ADDR)   ) ;
+
+	uint32_t cnt = 1;
+    char msg[100];
+    uint32_t tick;
+    float vref,vbat,temp;
+    osDelay(1000);
+
+
+    JAVMSG_t jav;
+
+
   for(;;)
   {
 	  tick=  osKernelGetTickCount();
-	  int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
-	 	  HAL_UART_Transmit(&huart3, msg,len , 100);
-	 	  cnt++;
+	 // int len = sprintf(msg,"MS Since last issue :%d\n\r",tick);
+      //nt len = sprintf(msg,"MS Since last issue :%d Temp =%f Vbat = %f vref = %f\n\r",tick,temp,vbat,vref );
+
+      cnt = osMessageQueueGetCount(RX_msg_queueHandle);
+      int len = sprintf(msg,"uptime (ms) %d | queue length = %d |\n\r",tick ,cnt);
+      HAL_UART_Transmit(&huart3, msg,len , 100);
+
+
+
+
+
+
+
     osDelay(1000);
   }
   /* USER CODE END Blink_Init */
 }
 
-/* USER CODE BEGIN Header_IDWGTrigger_Init */
+/* USER CODE BEGIN Header_IDWGTrigger_InitosThreadYield();  */
 /**
 * @brief Function implementing the IDWGTrigger thread.
 * @param argument: Not used
@@ -210,14 +309,205 @@ void IDWGTrigger_Init(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  HAL_IWDG_Refresh(&hiwdg1);
+      HAL_IWDG_Refresh(&hiwdg1);
     osDelay(1);
+
+
   }
   /* USER CODE END IDWGTrigger_Init */
+}
+
+/* USER CODE BEGIN Header_ADCPoll_Init */
+
+uint32_t ADC3_Chnls[3] = {ADC_CHANNEL_TEMPSENSOR,ADC_CHANNEL_VBAT,ADC_CHANNEL_VREFINT};
+
+void ADC_ChnlSel(ADC_HandleTypeDef *hadc, int Chnl){
+
+    ADC_ChannelConfTypeDef sConfig = {0};
+
+    sConfig.Channel = ADC3_Chnls[Chnl];
+    //sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
+    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_387CYCLES_5;
+    sConfig.SingleDiff = ADC_SINGLE_ENDED;
+    sConfig.OffsetNumber = ADC_OFFSET_NONE;
+    sConfig.Offset = 0;
+    sConfig.OffsetSignedSaturation = DISABLE;
+    if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+
+}
+
+/**
+* @brief Function implementing the ADCPoll thread.
+* @param argument: Not used
+* @retval None
+ * TODO calculate time to see if all can be converted in one go
+*/
+/* USER CODE END Header_ADCPoll_Init */
+void ADCPoll_Init(void *argument)
+{
+  /* USER CODE BEGIN ADCPoll_Init */
+  /* Infinite loop */
+    int adcchnl = 0;
+    HAL_ADC_Start(&hadc3);
+    HAL_ADC_PollForConversion(&hadc3, 100);
+  for(;;)
+  {
+         adcval[adcchnl] = HAL_ADC_GetValue(&hadc3);
+         HAL_ADC_Stop(&hadc3);
+
+         adcchnl++;
+         if(adcchnl >2){
+             adcchnl = 0;
+         }
+         ADC_ChnlSel(&hadc3,adcchnl);
+         HAL_ADC_Start(&hadc3);
+         HAL_ADC_PollForConversion(&hadc3, 100);
+
+
+    osDelay(1);
+  }
+  /* USER CODE END ADCPoll_Init */
+}
+
+/* USER CODE BEGIN Header_PSFunctions_Init */
+/**
+* @brief Function implementing the PSFunctions thread.
+* @param argument: Not used
+* @retval None
+*/
+
+
+
+/* USER CODE END Header_PSFunctions_Init */
+void PSFunctions_Init(void *argument)
+{
+  /* USER CODE BEGIN PSFunctions_Init */
+  /* Infinite loop */
+
+
+    STR.rawMIN=120;
+    STR.rawMAX=200;
+    STR.degMAX = 90;
+    STR.chl= 3;
+    STR.htim = &htim2;
+    STR.degMSG = 0;
+    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
+
+    LED.reverseLockOut=notCleared;
+    LED.state =UnArmed;
+    LED.rawMIN=0;
+    LED.rawMAX=TIM12->ARR;
+    LED.MAXIMUMOVERDRIVE = 100;
+    LED.direction=Forward;
+    LED.PWM_CHNL= 1;
+    LED.htim = &htim12;
+
+    DRV.reverseLockOut=notCleared;
+    DRV.state =UnArmed;
+    DRV.msgPwr=0;
+    DRV.rawMIN=100;
+    DRV.rawMAX=200;
+    DRV.MAXIMUMOVERDRIVE = 100;
+    DRV.direction=Forward;
+    DRV.PWM_CHNL= 4;
+    DRV.htim = &htim2; //PWM2
+    HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_4);
+    armESC_RTOS(&DRV);
+
+  for(;;)
+  {
+      setPower(&DRV,DRV.msgPwr,Arming);
+      servo_Set(&STR,STR.degMSG);
+      osDelay(1);
+  }
+  /* USER CODE END PSFunctions_Init */
+}
+
+/* USER CODE BEGIN Header_SSFunctions_Init */
+/**
+* @brief Function implementing the SSFunctions thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_SSFunctions_Init */
+
+void SSFunctions_Init(void *argument)
+{
+  /* USER CODE BEGIN SSFunctions_Init */
+
+
+
+  /* Infinite loop */
+  for(;;)
+  {
+
+  }
+  /* USER CODE END SSFunctions_Init */
+}
+
+/* USER CODE BEGIN Header_DSFunctions_Init */
+/**
+* @brief Function implementing the DSFunctions thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_DSFunctions_Init */
+void DSFunctions_Init(void *argument)
+{
+  /* USER CODE BEGIN DSFunctions_Init */
+  /* Infinite loop */
+
+    SRC.pos =0;
+    SRC.des =0;
+    SRC.StepPort =STEP1_step_GPIO_Port;
+    SRC.StepPin = STEP1_step_Pin;
+    SRC.DirPort = STEP1_Dir_GPIO_Port;
+    SRC.DirPin =STEP1_Dir_Pin;
+    SRC.EnPort = STEP1_EN_GPIO_Port;
+    SRC.EnPin =STEP1_EN_Pin;
+    SRC.enabled = 0;
+    SRC.dir = 0;
+    SRC.state = 0;
+    SRC.step = 0;
+
+  for(;;)
+  {
+
+    //  StepUpdate(&SRC,SRC.des);
+     // StepUpdate(&SRN,SRN.des);
+
+
+
+    osDelay(1);
+  }
+  /* USER CODE END DSFunctions_Init */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
+
+
+
+void MSGProcess_Init(void *argument){
+
+    MSGinit();
+    lastRecMsg = 0;
+    for(;;){
+
+        if(  osKernelGetTickCount() > lastRecMsg +2000){
+            DRV.msgPwr = 0;
+            setPower(&DRV,0,Arming);
+        }
+        osDelay(1);
+
+        MSGHandleLoop();
+    }
+}
 /* USER CODE END Application */
 

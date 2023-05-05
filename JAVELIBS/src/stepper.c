@@ -4,10 +4,15 @@
 
 #include "stepper.h"
 
-void StepMoveDir(StepperMotorTypeDef* motor, int D);
+
+stepper_t SRC;
+stepper_t SRN;
 
 
-int StepChkDir(StepperMotorTypeDef* motor,int DesLoc){
+void StepMoveDir(stepper_t* motor, int D);
+
+
+int StepChkDir(stepper_t* motor,int DesLoc){
 
     if(DesLoc > motor->pos ){
         return 1;
@@ -24,7 +29,7 @@ int StepChkDir(StepperMotorTypeDef* motor,int DesLoc){
     }
 
 }
-void StepUpdate(StepperMotorTypeDef* motor, int DesLoc){
+void StepUpdate(stepper_t* motor, int DesLoc){
 
     //checks the motor direction
     /* 0 = no spin
@@ -54,7 +59,7 @@ void StepUpdate(StepperMotorTypeDef* motor, int DesLoc){
 
 }
 
-void Step(StepperMotorTypeDef* motor){
+void Step(stepper_t* motor){
 
     if(motor->step == 1){
         motor->step =0;
@@ -73,11 +78,11 @@ void Step(StepperMotorTypeDef* motor){
 }
 
 
-void StepGoTo(StepperMotorTypeDef* motor, int DesLoc){
+void StepGoTo(stepper_t* motor, int DesLoc){
     motor->des = DesLoc;
 }
 
-void StepSetDir(StepperMotorTypeDef* motor,int D){
+void StepSetDir(stepper_t* motor,int D){
 
 
     if(D == 1){
@@ -94,7 +99,7 @@ void StepSetDir(StepperMotorTypeDef* motor,int D){
     }
 
 }
-void StepEnable(StepperMotorTypeDef* motor, int EN){
+void StepEnable(stepper_t* motor, int EN){
 
     if(EN == 1){
         motor->enabled =1;
@@ -110,7 +115,7 @@ void StepEnable(StepperMotorTypeDef* motor, int EN){
     }
 }
 
-void StepInit(StepperMotorTypeDef* motor){
+void StepInit(stepper_t* motor){
 
     StepEnable(motor,motor->enabled);
     StepSetDir(motor,motor->dir);
@@ -119,7 +124,7 @@ void StepInit(StepperMotorTypeDef* motor){
 /*example define
  *
  *
-    StepperMotorTypeDef* mot;
+    stepper_t* mot;
     mot->pos =0;
     mot->des =0;
     mot->StepPort =LD1_GPIO_Port;

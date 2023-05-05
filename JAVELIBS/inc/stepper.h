@@ -7,7 +7,7 @@
 
 #include "gpio.h"
 
-typedef struct  {
+typedef struct  StepperMotorTypeDef{
 
     int pos;
     int des;
@@ -22,14 +22,17 @@ typedef struct  {
     int state;
     int step;
 
-}StepperMotorTypeDef;
+}stepper_t;
 
-void StepInit(StepperMotorTypeDef* motor);
-void StepMoveDir(StepperMotorTypeDef* motor, int D);
-int StepChkDir(StepperMotorTypeDef* motor,int DesLoc);
-void StepGoTo(StepperMotorTypeDef* motor, int DesLoc);
-void StepUpdate(StepperMotorTypeDef* motor, int DesLoc);
-void StepSetDir(StepperMotorTypeDef* motor,int D);
-void StepEnable(StepperMotorTypeDef* motor, int EN);
-void Step(StepperMotorTypeDef* motor);
+extern stepper_t SRC;
+extern stepper_t SRN;
+
+void StepInit(stepper_t* motor);
+void StepMoveDir(stepper_t* motor, int D);
+int StepChkDir(stepper_t* motor,int DesLoc);
+void StepGoTo(stepper_t* motor, int DesLoc);
+void StepUpdate(stepper_t* motor, int DesLoc);
+void StepSetDir(stepper_t* motor,int D);
+void StepEnable(stepper_t* motor, int EN);
+void Step(stepper_t* motor);
 #endif //JAVELIN_STEPPER_H

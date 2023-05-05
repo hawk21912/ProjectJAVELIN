@@ -14,6 +14,7 @@
 #include "tcpserver.h"
 #include "string.h"
 #include "MSGHandler.h"
+#include "cmsis_os.h"
 static struct netconn *conn, *newconn;
 static struct netbuf *buf;
 static ip_addr_t *addr;
@@ -33,7 +34,7 @@ static void tcp_thread(void *arg)
 
 	if (conn!=NULL)
 	{
-		/* Bind connection to the port number 7. */
+		/* Bind connection to the port number 10. */
 		err = netconn_bind(conn, IP_ADDR_ANY, 10);
 
 		if (err == ERR_OK)
@@ -64,14 +65,25 @@ static void tcp_thread(void *arg)
 						do
 						{
 
-							strncpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
 
-							MSGReceive(msg);
+							memcpy (msg, buf->p->payload, buf->p->len);   // get the message from the client
 
+
+                            JAVMSG_t jav;
+                            jav.id    = msg[0];
+                            jav.Byte2 = msg[1];
+                            jav.Byte3 = msg[2];
+                            jav.Byte4 = msg[3];
+                            jav.Byte5 = msg[4];
+                            jav.Byte6 = msg[5];
+                            jav.Byte7 = msg[6];
+                            jav.Byte8 = msg[7];
+                            osMessageQueuePut(RX_msg_queueHandle,  &jav, 0, 0);
+                            lastRecMsg = osKernelGetTickCount();
 
 							// Or modify the message received, so that we can send it back to the client
-							int len = sprintf (smsg, "\"%s\" was sent by PROJECT JAVELIN\n", msg);
-								HAL_UART_Transmit(&huart3,smsg,len,100);
+							int len = sprintf (smsg, "\"%s\" was sent by PROJECT JAVELIN\n\r", msg);
+								//HAL_UART_Transmit(&huart3,smsg,len,100);
 							netconn_write(newconn, smsg, len, NETCONN_COPY);  // send the message back to the client
 							memset (msg, '\0', 100);  // clear the buffer
 						}

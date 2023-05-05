@@ -1,3 +1,0 @@
-../JAVELIBS/src/RGB_LED.c:17:6:RGB_FORCE	24	static
-../JAVELIBS/src/RGB_LED.c:29:6:RGB_PWM_SET	32	static
-../JAVELIBS/src/RGB_LED.c:71:6:RGB_PWM_Define	32	static
